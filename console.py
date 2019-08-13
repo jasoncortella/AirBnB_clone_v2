@@ -12,7 +12,6 @@ from models.place import Place
 from models.review import Review
 from shlex import split
 
-
 class HBNBCommand(cmd.Cmd):
     """this class is entry point of the command interpreter
     """
@@ -43,6 +42,14 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
+            for i in range(len(my_list)):
+                if '=' in my_list[i]:
+                    key, value = my_list[i].split('=')
+                    value = value.replace('_', ' ')
+                    if hasattr(obj, key):
+                        setattr(obj, key, eval(value))
+                else:
+                    continue
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
