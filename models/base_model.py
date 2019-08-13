@@ -3,12 +3,20 @@
 import uuid
 import models
 from datetime import datetime
+from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class BaseModel:
     """This class will defines all common attributes/methods
     for other classes
     """
+
+    id = Column(String(60), nullable=false, primary_key=True)
+    created_at = Column(DateTime, nullable=false, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=false, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instantiation of base model class
@@ -29,7 +37,6 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
-            models.storage.new(self)
 
     def __str__(self):
         """returns a string
@@ -48,15 +55,21 @@ class BaseModel:
         """updates the public instance attribute updated_at to current
         """
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        """creates dictionary of the class  and returns
+        """creates dictionary of the class and returns
         Return:
             returns a dictionary of all the key values in __dict__
         """
         my_dict = dict(self.__dict__)
+        my_dict.pop('_sa_instance_state', None)
         my_dict["__class__"] = str(type(self).__name__)
         my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
         return my_dict
+
+    def delete(self):
+        '''Deletes current instance from storage by calling method delete'''
+        models.storage.delete(self)
