@@ -2,7 +2,11 @@
 '''DBStorage engine'''
 
 import MySQLdb
+from models import City, State, Place, Review, Amenity, User
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import os
+
 
 class DBStorage:
     '''class for DBStorage'''
@@ -25,7 +29,22 @@ class DBStorage:
 
     def all(self, cls=None):
         '''Query all objects on current database session'''
-        if cls is None:
+        all_dict = {}
+        if cls:
+            x = self.__session.query(cls).all()
+        else:
+            x = self.__session.query(User).all()
+            x += self.__session.query(State).all()
+            x += self.__session.query(City).all()
+            x += self.__session.query(Amenity).all()
+            x += self.__session.query(Place).all()
+            x += self.__session.query(Review).all()
+
+        for obj in x:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            # key convention - <class-name>.<object-id>
+            all_dict[key] = obj
+        return all_dict
 
     def new(self, obj):
         '''Adds object to current database session'''
@@ -43,3 +62,7 @@ class DBStorage:
     def reload(self):
         '''Creates current db session from engine and all tables in db'''
         Base.metadata.create_all(self.__engine)
+
+        Session = scoped_session(sessionmaker(bind=self.__engine,
+                                              expire_on_commit=False))
+        self.__session = Session()
