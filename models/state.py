@@ -19,4 +19,3 @@ class State(BaseModel):
 
     @property
     def cities:
-

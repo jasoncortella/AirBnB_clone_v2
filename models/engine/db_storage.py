@@ -21,13 +21,11 @@ class DBStorage:
                                       pool_pre_ping=True)
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+            # Drop all tables for testing purposes
 
     def all(self, cls=None):
         '''Query all objects on current database session'''
         if cls is None:
-
-
-
 
     def new(self, obj):
         '''Adds object to current database session'''
@@ -41,10 +39,7 @@ class DBStorage:
         '''Deletes obj from current database session'''
         if obj:
             self.__session.delete(obj)
-            
+
     def reload(self):
         '''Creates current db session from engine and all tables in db'''
         Base.metadata.create_all(self.__engine)
-
-
-
