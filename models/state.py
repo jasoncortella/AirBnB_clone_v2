@@ -3,6 +3,9 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from models.city import City
+import os
+
 
 class State(BaseModel, Base):
     """This is the class for State
@@ -13,11 +16,12 @@ class State(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
 
+    cities = relationship('City',
+                          cascade='all, delete',
+                          backref='state')
+
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship('City',
-                              cascade='all, delete',
-                              backref='state')
-    else:
         @property
-        def cities:
-            return [x for x in cities if state_id == self.id]
+        def cities():
+            return [x for city in models.storage.all(City)
+                    if city.state_id == self.id]

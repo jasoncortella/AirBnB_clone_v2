@@ -2,8 +2,15 @@
 '''DBStorage engine'''
 
 import MySQLdb
-from models import City, State, Place, Review, Amenity, User
+from models.base_model import BaseModel, Base
+from models.city import City
+from models.state import State
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
+from models.user import User
 from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 import os
 
@@ -31,16 +38,16 @@ class DBStorage:
         '''Query all objects on current database session'''
         all_dict = {}
         if cls:
-            x = self.__session.query(cls).all()
+            result = self.__session.query(cls).all()
         else:
-            x = self.__session.query(User).all()
-            x += self.__session.query(State).all()
-            x += self.__session.query(City).all()
-            x += self.__session.query(Amenity).all()
-            x += self.__session.query(Place).all()
-            x += self.__session.query(Review).all()
+            result = []
+            _list = ['User', 'State']
+            for i in _list:
+                y = self.__session.query(eval(i))
+                for j in y:
+                    result.append(j)
 
-        for obj in x:
+        for obj in result:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             # key convention - <class-name>.<object-id>
             all_dict[key] = obj
