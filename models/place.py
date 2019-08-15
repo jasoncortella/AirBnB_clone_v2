@@ -22,13 +22,24 @@ class Place(BaseModel, Base):
     """
     __tablename__ = "places"
 
-    place_amenity = Table('place_amenity', Base.metadata,
-                    Column('place_id', 
-                        String(60), ForeignKey('places.id'), primary_key=True, nullable=False)
-            Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
+    place_amenity = Table('place_amenity',
+                          Base.metadata,
+                          Column('place_id',
+                                 String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True,
+                                 nullable=False)
+
+                          Column('amenity_id',
+                                 String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True,
+                                 nullable=False))
 
     if os.getenv("HBNB_TYPE_STORAGE") == 'db':
-        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
+        amenities = relationship("Amenity",
+                                 secondary=place_amenity,
+                                 viewonly=False)
     else:
         @property
         def amenities(self):
@@ -40,8 +51,6 @@ class Place(BaseModel, Base):
 
 #       @setter
 #       def amenities(self, amenity_object
-
-
 
     city_id = Column(String(60),
                      ForeignKey("cities.id"),
