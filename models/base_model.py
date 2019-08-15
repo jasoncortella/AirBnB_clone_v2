@@ -59,6 +59,7 @@ class BaseModel:
         Return:
             returns a string of class name, id, and dictionary
         """
+        self.__dict__.pop('_sa_instance_state', None)
         return "[{}] ({}) {}".format(
             type(self).__name__, self.id, self.__dict__)
 
