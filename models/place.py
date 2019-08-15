@@ -3,6 +3,20 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Table, Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
+import os
+
+place_amenity = Table('place_amenity',
+                      Base.metadata,
+                      Column('place_id',
+                             String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True,
+                             nullable=False),
+                      Column('amenity_id',
+                             String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True,
+                             nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -20,37 +34,8 @@ class Place(BaseModel, Base):
         longitude: longitude in float
         amenity_ids: list of Amenity ids
     """
+
     __tablename__ = "places"
-
-    place_amenity = Table('place_amenity',
-                          Base.metadata,
-                          Column('place_id',
-                                 String(60),
-                                 ForeignKey('places.id'),
-                                 primary_key=True,
-                                 nullable=False)
-
-                          Column('amenity_id',
-                                 String(60),
-                                 ForeignKey('amenities.id'),
-                                 primary_key=True,
-                                 nullable=False))
-
-    if os.getenv("HBNB_TYPE_STORAGE") == 'db':
-        amenities = relationship("Amenity",
-                                 secondary=place_amenity,
-                                 viewonly=False)
-    else:
-        @property
-        def amenities(self):
-            amenity_list = []
-            for x in self.amenity_ids:
-                if x.id == self.id:
-                    amenity_list += x
-            return amenity_list
-
-#       @setter
-#       def amenities(self, amenity_object
 
     city_id = Column(String(60),
                      ForeignKey("cities.id"),
@@ -89,3 +74,21 @@ class Place(BaseModel, Base):
                        nullable=True)
 
     amenity_ids = []
+
+    if os.getenv("HBNB_TYPE_STORAGE") == 'db':
+        amenities = relationship("Amenity",
+                                 secondary=place_amenity,
+                                 viewonly=False)
+    else:
+        @property
+        def amenities(self):
+            amenity_list = []
+            for x in self.amenity_ids:
+                if x.id == self.id:
+                    amenity_list.append(x)
+            return amenity_list
+
+        @amenities.setter
+        def amenities(self, obj):
+            if type(obj).__name__ == 'Amenity':
+                self.amenity_ids.append(obj)
