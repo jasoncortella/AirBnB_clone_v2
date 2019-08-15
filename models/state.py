@@ -17,11 +17,10 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     cities = relationship('City',
-                          cascade='all, delete',
                           backref='state')
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         @property
-        def cities():
+        def cities(self):
             return [x for city in models.storage.all(City)
                     if city.state_id == self.id]
