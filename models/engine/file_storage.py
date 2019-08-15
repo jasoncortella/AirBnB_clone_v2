@@ -69,3 +69,7 @@ class FileStorage:
                     self.__objects[key] = value
         except FileNotFoundError:
             pass
+
+    def reset(self):
+        """Reset all objects for testing purposes"""
+        self.__objects = {}
