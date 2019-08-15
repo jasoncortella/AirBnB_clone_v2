@@ -41,7 +41,7 @@ class DBStorage:
             result = self.__session.query(cls).all()
         else:
             result = []
-            _list = ['User', 'State']
+            _list = ['User', 'State', 'City', 'Review', 'Place', 'Amenity']
             for i in _list:
                 y = self.__session.query(eval(i))
                 for j in y:
