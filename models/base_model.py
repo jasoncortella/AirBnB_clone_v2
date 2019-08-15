@@ -14,9 +14,17 @@ class BaseModel:
     for other classes
     """
 
-    id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    id = Column(String(60),
+                nullable=False,
+                primary_key=True)
+
+    created_at = Column(DateTime,
+                        nullable=False,
+                        default=datetime.utcnow())
+
+    updated_at = Column(DateTime,
+                        nullable=False,
+                        default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instantiation of base model class
@@ -34,6 +42,14 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
+            if self.id is None:
+                self.id = str(uuid.uuid4())
+            datetimeNow = datetime.now()
+            # Use variable assignment to guarantee matching created/updated at
+            if self.created_at is None:
+                self.created_at = datetimeNow
+            if self.updated_at is None:
+                self.updated_at = datetimeNow
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
