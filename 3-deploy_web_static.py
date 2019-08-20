@@ -21,9 +21,6 @@ def do_pack():
     return None
 
 
-from fabric.api import env, put, run
-import os
-
 env.hosts = ["35.237.201.27", "35.243.139.79"]
 
 
@@ -64,6 +61,7 @@ def do_deploy(archive_path):
         return False
     print("New version deployed!")
     return True
+
 
 def deploy():
     """Create and distribute an archive to a web server."""
