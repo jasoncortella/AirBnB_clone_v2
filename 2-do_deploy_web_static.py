@@ -20,7 +20,7 @@ def do_deploy(archive_path):
     x = run("mkdir -p /data/web_static/releases/{}/".format(fname))
     if x.failed:
         return False
-    x = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+    x = run("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/".
             format(fname, fname))
     if x.failed:
         return False
