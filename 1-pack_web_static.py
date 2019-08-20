@@ -3,12 +3,10 @@
 
 from fabric.api import local
 from datetime import datetime
-import os
 
 
 def do_pack():
     """Packs files from specified directory into .tgz file"""
-
     dt = datetime.now()
     file = 'versions/web_static_{}{}{}{}{}{}.tgz'.format(dt.year,
                                                          dt.month,
