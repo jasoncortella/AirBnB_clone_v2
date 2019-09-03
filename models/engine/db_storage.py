@@ -38,7 +38,7 @@ class DBStorage:
         '''Query all objects on current database session'''
         all_dict = {}
         if cls:
-            result = self.__session.query(cls).all()
+            result = self.__session.query(eval(cls)).all()
         else:
             result = []
             _list = ['User', 'State', 'City', 'Review', 'Place', 'Amenity']
