@@ -32,6 +32,7 @@ def states_id(id=None):
                            states=states,
                            id=id)
 
+
 @app.teardown_appcontext
 def teardown(self):
     """Remove the current SQLAlchemy session."""
