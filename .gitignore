@@ -3,3 +3,4 @@ __pycache__/
 test_params_create
 transfer
 versions/
+fabricinstall.sh
